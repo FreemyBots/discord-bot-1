@@ -167,21 +167,21 @@ async def clear(ctx, amount):
 @client.command(pass_context=True)
 async def unmute(ctx, user):
     try:
-        role = discord.utils.get(user.guild.roles, name='Muted')
+        role = commands.RoleConverter.convert(ctx, 'Muted')
         await user.remove_roles(role)
         await ctx.send(f"{user} has been unmuted")
-    except:
-        await ctx.send("There is no role named Muted")
+    except Exception as e:
+        await ctx.send("There is no role named Muted\n\n"+e)
         
 @client.command(name='mute')
 @commands.has_permissions(manage_messages=True)
 async def mute(ctx, user: discord.Member, *, reason=None):
     try:
-        role = discord.utils.get(user.guild.roles, name='Muted')
+        role = commands.RoleConverter.convert(ctx, 'Muted')
         await user.add_roles(role)
         await ctx.send(f"{user} has been muted")
-    except:
-        await ctx.send("There is no role named Muted")
+    except Exception as e:
+        await ctx.send("There is no role named Muted\n\n"+e)
 
 @client.command(name='say')
 async def say(ctx, *, msg):
