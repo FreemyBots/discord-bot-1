@@ -186,12 +186,11 @@ async def mute(ctx, user: discord.Member, *, reason=None):
 @client.command(name='say')
 async def say(ctx, *, msg):
     for word in msg.split():
-        if word in badWords:
+        if word.lower() in badWords:
             await ctx.send("That word is not allowed")
             print(f"{ctx.message.author} tried to make me say a bad word")
-            break
-    if word != badWords:
-        await ctx.send(f'{msg} \n \n- **{ctx.message.author}**')
+            return
+    await ctx.send(f'{msg} \n \n- **{ctx.message.author}**')
 
 
 
