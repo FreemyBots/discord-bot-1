@@ -25,6 +25,25 @@ client = commands.Bot(command_prefix = Prefix)
 # Remove the defualt $help command
 client.remove_command("help")
 
+@client.event
+async def on_message(message):
+    if message.author.bot:return
+    with open("data.json", "r") as d:
+        data = json.load(d)
+    if data[str(message.guild.id)][str(message.author.id)]['xp']:
+        data[str(message.guild.id)][str(message.author.id)]['xp'] += 1
+    else:data[str(message.guild.id)][str(message.author.id)]['xp'] = 0
+    with open("data.json", "w") as d:
+        json.dump(data, d)
+
+@client.event
+async def on_member_join(member):
+    if member.bot:return
+    with open("data.json", "r") as d:
+        data = json.load(d)
+    data[str(member.guild.id)][str(member.id)] = {'xp':0}
+    with open("data.json", "w") as d:
+        json.dump(data, d)
 
 @client.command(pass_context=True)
 async def help(ctx):
@@ -63,9 +82,14 @@ async def fun(ctx):
     embed.add_field(name=f'{Prefix}say', value='Make the bot repeat anything', inline=False)
     await ctx.send(author.mention, embed=embed)
 
-@client.command(pass_context=True)
-async def currency(ctx):
-    pass
+@client.command(pass_context=True, name="rank", aliases=["xp"])
+async def rank(ctx):
+    with open("data.json", "r") as d:
+        data = json.load(d)
+    if data[str(message.guild.id)][str(message.author.id)]['xp']:
+        await ctx.send(data[str(message.guild.id)][str(message.author.id)]['xp'])
+    else:
+        await ctx.send("You have not been ranked.")
     
 @client.event
 async def on_ready():
